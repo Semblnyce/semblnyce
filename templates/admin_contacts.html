@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Admin - Contact Submissions - semblnyce{% endblock %}
+{% block content %}
+<h1 style="text-align: center; margin-bottom: 40px;">CONTACT SUBMISSIONS</h1>
+
+<div style="margin-bottom: 20px;">
+    <a href="/admin/views" class="btn btn-secondary">BACK TO ADMIN</a>
+</div>
+
+{% if contacts %}
+    {% for contact in contacts %}
+    <div class="content-box" style="margin-bottom: 20px;">
+        <h3>{{ contact.name }}</h3>
+        <p><strong>Email:</strong> {{ contact.email }}</p>
+        <p><strong>Message:</strong> {{ contact.message }}</p>
+        <p><small>Submitted: {{ contact.timestamp }}</small></p>
+    </div>
+    {% endfor %}
+{% else %}
+    <p>No contact submissions yet.</p>
+{% endif %}
+{% endblock %}

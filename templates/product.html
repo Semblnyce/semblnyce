@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }} - semblnyce{% endblock %}
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto;">
+    <h1>{{ product.name }}</h1>
+    <div class="content-box" style="margin-top: 30px;">
+        <div class="product-image" style="height: 400px; margin-bottom: 30px;">
+            <span style="font-size: 8rem;">{{ product.id }}</span>
+        </div>
+        <p style="font-size: 2rem; margin-bottom: 20px;">${{ product.price }}</p>
+        <p style="margin-bottom: 30px;">This piece represents the raw energy of street culture, designed by one of our featured artists experiencing homelessness.</p>
+        <button class="btn" onclick="alert('Shopping cart coming soon!')">add to cart</button>
+        <a href="/shop" class="btn btn-secondary" style="margin-left: 10px;">back to shop</a>
+    </div>
+</div>
+{% endblock %}

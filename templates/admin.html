@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Admin - View Counter - semblnyce{% endblock %}
+{% block content %}
+<h1 style="text-align: center; margin-bottom: 40px;">ADMIN VIEW COUNTER</h1>
+
+<div class="admin-stats">
+    <h2>Total Views: {{ view_data.total }}</h2>
+
+    <h3 style="margin-top: 30px; margin-bottom: 20px;">Page Breakdown:</h3>
+    {% for page, count in view_data.pages.items() %}
+    <div class="stat-item">
+        <strong>{{ page }}:</strong> {{ count }} views
+    </div>
+    {% endfor %}
+</div>
+
+<div style="margin-top: 30px;">
+    <a href="/admin/contacts" class="btn">VIEW CONTACT SUBMISSIONS</a>
+</div>
+{% endblock %}

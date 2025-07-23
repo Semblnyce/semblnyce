@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}Donate - semblnyce{% endblock %}
+{% block content %}
+<h1 style="text-align: center; margin-bottom: 40px;">SUPPORT THE MOVEMENT</h1>
+
+<div class="donation-counter">
+    $<span id="totalRaised">{{ "{:,}".format(total_raised) }}</span>
+    <small>RAISED SO FAR</small>
+</div>
+
+<p style="text-align: center; font-size: 1.1rem; margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto;">
+    Your donation helps fund shelter, creativity, and dignity for unhoused artists.
+</p>
+
+<div class="donation-buttons">
+    <button class="donation-btn" onclick="selectDonation(10, this)">$10</button>
+    <button class="donation-btn" onclick="selectDonation(25, this)">$25</button>
+    <button class="donation-btn" onclick="selectDonation(50, this)">$50</button>
+    <button class="donation-btn" onclick="selectDonation(100, this)">$100</button>
+    <button class="donation-btn" onclick="selectOtherDonation(this)">OTHER</button>
+</div>
+
+<div style="text-align: center; margin-top: 40px;">
+    <button class="btn" style="font-size: 1.2rem; padding: 20px 50px;" onclick="processDonation()">DONATE NOW</button>
+</div>
+
+<script>
+let selectedDonation = 0;
+
+function selectDonation(amount, button) {
+    selectedDonation = amount;
+    document.querySelectorAll('.donation-btn').forEach(btn => {
+        btn.classList.remove('selected');
+    });
+    button.classList.add('selected');
+}
+
+function selectOtherDonation(button) {
+    const amount = prompt('Enter donation amount:');
+    if (amount && !isNaN(amount) && parseFloat(amount) > 0) {
+        selectedDonation = parseFloat(amount);
+        document.querySelectorAll('.donation-btn').forEach(btn => {
+            btn.classList.remove('selected');
+        });
+        button.classList.add('selected');
+    }
+}
+
+async function processDonation() {
+    if (selectedDonation > 0) {
+        try {
+            const response = await fetch('/process_donation', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ amount: selectedDonation })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                document.getElementById('totalRaised').textContent = result.new_total.toLocaleString();
+                alert(`Thank you for your $${selectedDonation} donation!`);
+
+                selectedDonation = 0;
+                document.querySelectorAll('.donation-btn').forEach(btn => {
+                    btn.classList.remove('selected');
+                });
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Donation processing error. Please try again.');
+        }
+    } else {
+        alert('Please select a donation amount.');
+    }
+}
+</script>
+{% endblock %}

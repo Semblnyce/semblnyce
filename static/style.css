@@ -1,0 +1,364 @@
+random();
+
+/* Neue Montreal Font Import */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+
+/* Font-face for Neue Montreal (fallback to Inter) */
+@font-face {
+    font-family: 'Neue Montreal';
+    src: url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'Neue Montreal';
+    src: url('https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap');
+    font-weight: 700;
+}
+
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Base Styles */
+body {
+    font-family: 'Neue Montreal', 'Inter', sans-serif;
+    font-weight: 400;
+    background-color: #000000;
+    color: #ffffff;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+    line-height: 1.6;
+}
+
+/* White dot grid background */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.15) 1px, transparent 1px);
+    background-size: 30px 30px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Headers - Neue Montreal Bold */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Neue Montreal', 'Inter', sans-serif;
+    
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+/* Container */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    position: relative;
+    z-index: 2;
+}
+
+/* Navigation */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 0;
+    border-bottom: 2px solid #ffffff;
+    margin-bottom: 40px;
+}
+
+.logo {
+    font-size: 2rem;
+    font-weight: 700;
+    text-decoration: none;
+    color: #ffffff;
+    text-transform: lowercase;
+    transition: all 0.3s ease;
+}
+
+.logo:hover {
+    transform: scale(1.05);
+    text-shadow: 2px 2px 0 rgba(255,0,255,0.9);
+}
+
+.nav-links {
+    display: flex;
+    gap: 30px;
+    list-style: none;
+}
+
+.nav-links a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: #ffffff;
+    transition: width 0.3s ease;
+}
+
+.nav-links a:hover::after {
+    width: 100%;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 12px 30px;
+    background: #ffffff;
+    color: #000000;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 2px solid #ffffff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.1em;
+    font-size: 0.9rem;
+}
+
+.btn:hover {
+    background: #000000;
+    color: #ffffff;
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: #000000;
+    color: #ffffff;
+    border: 2px solid #ffffff;
+}
+
+.btn-secondary:hover {
+    background: #ffffff;
+    color: #000000;
+}
+
+/* Forms */
+input, textarea {
+    width: 100%;
+    padding: 15px;
+    background: #000000;
+    border: 2px solid #ffffff;
+    color: #ffffff;
+    font-family: 'Neue Montreal', 'Inter', sans-serif;
+    font-weight: 400;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+}
+
+input::placeholder, textarea::placeholder {
+    color: rgba(255,255,255,0.5);
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    background: rgba(255,255,255,0.05);
+}
+
+/* Fade-in animation */
+.fade-in {
+    animation: fadeIn 2s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Product Grid */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin: 40px 0;
+}
+
+.product-card {
+    background: #000000;
+    border: 2px solid #ffffff;
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(255,255,255,0.1);
+}
+
+.product-image {
+    width: 100%;
+    height: 300px;
+    background: #111111;
+    border: 1px solid #ffffff;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: #333333;
+}
+
+/* Donation Styles */
+.donation-counter {
+    font-size: 4rem;
+    font-weight: 700;
+    text-align: center;
+    margin: 30px 0;
+}
+
+.donation-counter small {
+    font-size: 1rem;
+    font-weight: 400;
+    display: block;
+    margin-top: 10px;
+}
+
+.donation-buttons {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 30px 0;
+}
+
+.donation-btn {
+    padding: 15px 30px;
+    background: #000000;
+    border: 2px solid #ffffff;
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.donation-btn:hover,
+.donation-btn.selected {
+    background: #ffffff;
+    color: #000000;
+}
+
+/* Designer Info */
+.designer-info {
+    margin-top: 20px;
+    padding: 30px;
+    background: #000000;
+    border: 2px solid #ffffff;
+}
+
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    margin: 20px 0;
+    border: 2px solid #ffffff;
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* Admin Styles */
+.admin-stats {
+    background: #000000;
+    border: 2px solid #ffffff;
+    padding: 30px;
+    margin: 20px 0;
+}
+
+.admin-stats h2 {
+    margin-bottom: 20px;
+}
+
+.stat-item {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.stat-item:last-child {
+    border-bottom: none;
+}
+
+/* Hero Section */
+.hero {
+    text-align: center;
+    padding: 100px 0;
+}
+
+.hero h1 {
+    font-size: 5rem;
+    margin-bottom: 20px;
+    text-transform: lowercase;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    color: rgba(255,255,255,0.8);
+    letter-spacing: 0.2em;
+    margin-bottom: 40px;
+}
+
+/* Content Box */
+.content-box {
+    background: #000000;
+    border: 2px solid #ffffff;
+    padding: 40px;
+    margin: 40px 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .nav-links {
+        gap: 15px;
+    }
+
+    .hero h1 {
+        font-size: 3rem;
+    }
+
+    .product-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .donation-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .donation-btn {
+        width: 200px;
+    }
+}
