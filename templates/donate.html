@@ -21,10 +21,47 @@
 </div>
 
 <div style="text-align: center; margin-top: 40px;">
-    <button class="btn" style="font-size: 1.2rem; padding: 20px 50px;" onclick="processDonation()">DONATE NOW</button>
+    <button id="donateNowBtn" class="btn btn-large" onclick="openDonationModal()">DONATE NOW</button>
 </div>
 
+<!-- Donation Payment Modal -->
+<div id="donationModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000;">
+    <div class="payment-form" style="position: relative; top: 50%; transform: translateY(-50%); background: #000; border: 2px solid #fff; padding: 40px;">
+        <h2 style="margin-bottom: 30px;">COMPLETE YOUR DONATION</h2>
+        <p style="margin-bottom: 30px; font-size: 1.5rem;">Amount: $<span id="donationAmount">0</span></p>
+
+        <form id="donation-form">
+            <input type="text" id="donorName" placeholder="YOUR NAME" required>
+            <input type="email" id="donorEmail" placeholder="YOUR EMAIL" required>
+            <div id="donation-card-element"></div>
+            <div id="donation-card-errors" style="color: red; margin-bottom: 20px;"></div>
+            <button type="submit" class="btn btn-large" style="width: 100%;">
+                <span id="donation-button-text">COMPLETE DONATION</span>
+                <span class="spinner" style="display: none;"></span>
+            </button>
+        </form>
+
+        <button onclick="closeDonationModal()" class="btn btn-secondary" style="margin-top: 10px;">CANCEL</button>
+    </div>
+</div>
+
+<script src="https://js.stripe.com/v3/"></script>
 <script>
+const stripe = Stripe('{{ stripe_public_key }}');
+const elements = stripe.elements();
+const donationCardElement = elements.create('card', {
+    style: {
+        base: {
+            color: '#ffffff',
+            fontFamily: '"Inter", sans-serif',
+            fontSize: '16px',
+            '::placeholder': {
+                color: '#666666'
+            }
+        }
+    }
+});
+
 let selectedDonation = 0;
 
 function selectDonation(amount, button) {
@@ -46,35 +83,88 @@ function selectOtherDonation(button) {
     }
 }
 
-async function processDonation() {
-    if (selectedDonation > 0) {
-        try {
-            const response = await fetch('/process_donation', {
+function openDonationModal() {
+    if (selectedDonation === 0) {
+        alert('Please select a donation amount');
+        return;
+    }
+    document.getElementById('donationAmount').textContent = selectedDonation;
+    document.getElementById('donationModal').style.display = 'block';
+    donationCardElement.mount('#donation-card-element');
+}
+
+function closeDonationModal() {
+    document.getElementById('donationModal').style.display = 'none';
+    donationCardElement.unmount();
+}
+
+// Donation form submission
+document.getElementById('donation-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const submitButton = document.querySelector('#donation-form button[type="submit"]');
+    submitButton.disabled = true;
+    document.getElementById('donation-button-text').style.display = 'none';
+    document.querySelector('#donation-form .spinner').style.display = 'inline-block';
+
+    try {
+        // Create payment intent
+        const response = await fetch('/create-payment-intent', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                amount: selectedDonation,
+                type: 'donation'
+            })
+        });
+
+        const {clientSecret} = await response.json();
+
+        // Confirm payment
+        const {error} = await stripe.confirmCardPayment(clientSecret, {
+            payment_method: {
+                card: donationCardElement,
+                billing_details: {
+                    name: document.getElementById('donorName').value,
+                    email: document.getElementById('donorEmail').value
+                }
+            }
+        });
+
+        if (error) {
+            document.getElementById('donation-card-errors').textContent = error.message;
+        } else {
+            // Payment successful
+            await fetch('/payment-success', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ amount: selectedDonation })
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    amount: selectedDonation,
+                    type: 'donation'
+                })
             });
 
-            const result = await response.json();
+            // Update counter
+            const currentTotal = parseFloat(document.getElementById('totalRaised').textContent.replace(/,/g, ''));
+            const newTotal = currentTotal + selectedDonation;
+            document.getElementById('totalRaised').textContent = newTotal.toLocaleString();
 
-            if (result.success) {
-                document.getElementById('totalRaised').textContent = result.new_total.toLocaleString();
-                alert(`Thank you for your $${selectedDonation} donation!`);
+            alert('Thank you for your donation! You\'ll receive a confirmation email shortly.');
+            closeDonationModal();
 
-                selectedDonation = 0;
-                document.querySelectorAll('.donation-btn').forEach(btn => {
-                    btn.classList.remove('selected');
-                });
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('Donation processing error. Please try again.');
+            // Reset selection
+            selectedDonation = 0;
+            document.querySelectorAll('.donation-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
         }
-    } else {
-        alert('Please select a donation amount.');
+    } catch (error) {
+        document.getElementById('donation-card-errors').textContent = 'An error occurred. Please try again.';
+    } finally {
+        submitButton.disabled = false;
+        document.getElementById('donation-button-text').style.display = 'inline';
+        document.querySelector('#donation-form .spinner').style.display = 'none';
     }
-}
+});
 </script>
 {% endblock %}

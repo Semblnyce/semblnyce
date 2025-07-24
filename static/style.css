@@ -1,5 +1,3 @@
-random();
-
 /* Neue Montreal Font Import */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
 
@@ -52,7 +50,6 @@ body::before {
 /* Headers - Neue Montreal Bold */
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Neue Montreal', 'Inter', sans-serif;
-    
     font-weight: 700;
     letter-spacing: -0.02em;
 }
@@ -87,7 +84,7 @@ nav {
 
 .logo:hover {
     transform: scale(1.05);
-    text-shadow: 2px 2px 0 rgba(255,0,255,0.9);
+    text-shadow: 2px 2px 0 rgba(255,255,255,0.3);
 }
 
 .nav-links {

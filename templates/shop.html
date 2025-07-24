@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Shop - semblnyce{% endblock %}
 {% block content %}
-<h1 style="text-align: center; margin-bottom: 40px;">t-shirts</h1>
+<h1 style="text-align: center; margin-bottom: 40px;">STREET GEAR</h1>
 
 <div class="product-grid">
     {% for product in products %}
@@ -11,8 +11,8 @@
         </div>
         <h3 style="margin-bottom: 10px;">{{ product.name }}</h3>
         <p style="font-size: 1.3rem; margin-bottom: 15px;">${{ product.price }}</p>
-        <a href="/product/{{ product.id }}" class="btn" style="width: 100%; text-align: center; margin-bottom: 10px;">view</a>
-        <a href="/designer/{{ product.designer_id }}" class="btn btn-secondary" style="width: 100%; text-align: center;">about the designer</a>
+        <a href="/product/{{ product.id }}" class="btn" style="width: 100%; text-align: center; margin-bottom: 10px;">VIEW</a>
+        <a href="/designer/{{ product.designer_id }}" class="btn btn-secondary" style="width: 100%; text-align: center;">ABOUT THE DESIGNER</a>
     </div>
     {% endfor %}
 </div>
