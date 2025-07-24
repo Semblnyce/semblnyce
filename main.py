@@ -3,7 +3,7 @@ import os
 import json
 from datetime import datetime
 
-app = Flask(__name__)s
+app = Flask(__name__)
 app.secret_key = 'semblnyce_secret_key_2024'
 
 # Initialize view counter
