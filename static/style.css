@@ -375,6 +375,17 @@ select option {
     font-size: 1.2rem;
 }
 
+.product-price {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.product-card:hover .product-price {
+    opacity: 1;
+}
+
 /* Product Page Styles */
 .product-container {
     max-width: 900px;
