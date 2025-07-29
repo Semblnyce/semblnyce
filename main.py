@@ -16,7 +16,11 @@ STRIPE_PUBLISHABLE_KEY = os.getenv('STRIPE_PUBLISHABLE_KEY')
 # Admin email addresses - only these can access admin panel
 ADMIN_EMAILS = [
     'semblnyce@gmail.com',
-    'rahibh2010@gmail.com',  # Add your admin emails here
+    'rahibh2010@gmail.com',  
+    'brandonho1957@gmail.com',
+    'jboateng.p937@prepforprep.org',
+    'rhoque.pf44@prepforprep.org',
+    'ife2025.team3@gmail.com'# Add your admin emails here
 ]
 
 # === Email Configuration ===
