@@ -5,8 +5,8 @@ description = "Street fashion platform supporting homeless artistsw"
 authors = ["Semblnyce Team <semblnyce@gmail.com>"]
 requires-python = ">=3.11"
 dependencies = [
-    "fla>=0.10.0",
     "flask>=3.1.1",
+    "flask-mail>=0.9.1",
     "stripe>=12.3.0",
     "python-dotenv>=1.0.0",
 ]
