@@ -8,10 +8,10 @@
     <div class="product-card" onclick="window.location.href='/product/{{ product.id }}'">
         <div class="product-image">
             <span>{{ product.image }}</span>
+            <div class="product-price-overlay">${{ product.price }}</div>
         </div>
         <div class="product-details">
             <h3>{{ product.name }}</h3>
-            <p class="product-price">${{ product.price }}</p>
         </div>
     </div>
     {% endfor %}
