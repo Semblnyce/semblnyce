@@ -3,57 +3,16 @@
 {% block content %}
 <h1 style="text-align: center; margin-bottom: 40px;">GET IN TOUCH</h1>
 
-<div class="content-box">
-    <form id="contactForm">
-        <input type="text" id="name" placeholder="YOUR NAME" required>
-        <input type="email" id="email" placeholder="YOUR EMAIL" required>
-        <textarea id="message" rows="5" placeholder="YOUR MESSAGE" required></textarea>
-        <button type="submit" class="btn btn-large">SEND MESSAGE</button>
-    </form>
-</div>
-
-<script>
-document.getElementById('contactForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const message = document.getElementById('message').value;
-    
-    try {
-        const response = await fetch('/submit_contact', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ name, email, message })
-        });
-        
-        const result = await response.json();
-        
-        if (result.success) {
-            alert(result.message);
-            document.getElementById('contactForm').reset();
-        } else {
-            alert('Error sending message. Please try again.');
-        }
-    } catch (error) {
-        alert('Error sending message. Please try again.');
-    }
-});
-</script>
-{% endblock %}
-
 <div style="max-width: 600px; margin: 0 auto;">
     <p style="font-size: 1.2rem; margin-bottom: 30px; text-align: center;">
         Email: <a href="mailto:semblnyce@gmail.com" style="color: #ffffff;">semblnyce@gmail.com</a>
     </p>
 
     <form id="contactForm" class="content-box">
-        <input type="text" id="name" placeholder="your name" required>
-        <input type="email" id="email" placeholder="your email" required>
-        <textarea id="message" rows="6" placeholder="your message" required></textarea>
-        <button type="submit" class="btn" style="width: 100%;">send message</button>
+        <input type="text" id="name" placeholder="YOUR NAME" required>
+        <input type="email" id="email" placeholder="YOUR EMAIL" required>
+        <textarea id="message" rows="6" placeholder="YOUR MESSAGE" required></textarea>
+        <button type="submit" class="btn btn-large" style="width: 100%;">SEND MESSAGE</button>
     </form>
 </div>
 
