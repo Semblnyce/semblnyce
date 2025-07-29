@@ -1,16 +1,244 @@
 {% extends "base.html" %}
 {% block title %}{{ product.name }} - semblnyce{% endblock %}
 {% block content %}
-<div style="max-width: 800px; margin: 0 auto;">
-    <h1>{{ product.name }}</h1>
-    <div class="content-box" style="margin-top: 30px;">
-        <div class="product-image" style="height: 400px; margin-bottom: 30px;">
-            <span style="font-size: 8rem;">{{ product.id }}</span>
+<div class="product-container">
+    <div class="product-main">
+        <div class="product-image-large">
+            <span>{{ product.image }}</span>
         </div>
-        <p style="font-size: 2rem; margin-bottom: 20px;">${{ product.price }}</p>
-        <p style="margin-bottom: 30px;">This piece represents the raw energy of street culture, designed by one of our featured artists experiencing homelessness.</p>
-        <button class="btn" onclick="alert('Shopping cart coming soon!')">ADD TO CART</button>
-        <a href="/shop" class="btn btn-secondary" style="margin-left: 10px;">BACK TO SHOP</a>
+
+        <div class="product-info">
+            <h1>{{ product.name }}</h1>
+            <div class="product-price">${{ product.price }}</div>
+            <div class="product-description">{{ product.description }}</div>
+
+            <div class="size-selection">
+                <label>SIZE:</label>
+                <div class="size-options">
+                    {% for size in product.sizes %}
+                    <div class="size-option" onclick="selectSize('{{ size }}', this)">{{ size }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="quantity-selection">
+                <label>QUANTITY:</label>
+                <div class="quantity-controls">
+                    <button class="quantity-btn" onclick="changeQuantity(-1)">−</button>
+                    <span class="quantity-display" id="quantity">1</span>
+                    <button class="quantity-btn" onclick="changeQuantity(1)">+</button>
+                </div>
+            </div>
+
+            <div class="product-actions">
+                <button class="btn btn-large" onclick="addToCart()">ADD TO CART</button>
+                <a href="/designer/{{ product.designer_id }}" class="btn btn-secondary">ABOUT THE DESIGNER</a>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-top: 40px;">
+        <a href="/shop" class="btn btn-secondary">← BACK TO SHOP</a>
     </div>
 </div>
+
+<!-- Checkout Modal -->
+<div id="checkoutModal" style="display: none;" class="payment-modal">
+    <div class="payment-form">
+        <h2>COMPLETE YOUR ORDER</h2>
+        <div id="order-summary" style="margin-bottom: 30px;">
+            <p><strong>{{ product.name }}</strong></p>
+            <p>Size: <span id="checkout-size">-</span></p>
+            <p>Quantity: <span id="checkout-quantity">1</span></p>
+            <p style="font-size: 1.2rem; margin-top: 15px;">Total: $<span id="checkout-total">{{ product.price }}</span></p>
+        </div>
+
+        <form id="checkout-form">
+            <input type="text" id="customerName" placeholder="YOUR NAME" required>
+            <input type="email" id="customerEmail" placeholder="YOUR EMAIL" required>
+            <div id="card-element"></div>
+            <div id="card-errors" style="color: red; margin-bottom: 20px;"></div>
+            <button type="submit" class="btn btn-large" style="width: 100%;">
+                <span id="button-text">COMPLETE PURCHASE</span>
+                <span class="spinner" style="display: none;"></span>
+            </button>
+        </form>
+
+        <button onclick="closeCheckoutModal()" class="btn btn-secondary" style="margin-top: 10px; width: 100%;">CANCEL</button>
+    </div>
+</div>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+let selectedSize = '';
+let currentQuantity = 1;
+
+const stripe = Stripe('{{ stripe_public_key or "pk_test_..." }}');
+const elements = stripe.elements();
+const cardElement = elements.create('card', {
+    style: {
+        base: {
+            color: '#ffffff',
+            fontFamily: '"Inter", sans-serif',
+            fontSize: '16px',
+            '::placeholder': {
+                color: '#666666'
+            }
+        }
+    }
+});
+
+function selectSize(size, element) {
+    // Remove selected class from all size options
+    document.querySelectorAll('.size-option').forEach(opt => {
+        opt.classList.remove('selected');
+    });
+
+    // Add selected class to clicked option
+    element.classList.add('selected');
+    selectedSize = size;
+}
+
+function changeQuantity(change) {
+    const newQuantity = currentQuantity + change;
+    if (newQuantity >= 1 && newQuantity <= 10) {
+        currentQuantity = newQuantity;
+        document.getElementById('quantity').textContent = currentQuantity;
+    }
+}
+
+function addToCart() {
+    if (!selectedSize) {
+        alert('Please select a size');
+        return;
+    }
+
+    fetch('/add_to_cart', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            product_id: '{{ product.id }}',
+            size: selectedSize,
+            quantity: currentQuantity
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('cartCount').textContent = data.cart_count;
+            const mobileCartCount = document.querySelector('.mobile-cart-count');
+            if (mobileCartCount) {
+                mobileCartCount.textContent = data.cart_count;
+            }
+
+            // Ask if user wants to checkout now or continue shopping
+            if (confirm('Added to cart! Would you like to checkout now?')) {
+                openCheckoutModal();
+            }
+        } else {
+            alert('Error adding to cart');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error adding to cart');
+    });
+}
+
+function openCheckoutModal() {
+    if (!selectedSize) {
+        alert('Please select a size');
+        return;
+    }
+
+    const total = {{ product.price }} * currentQuantity;
+
+    document.getElementById('checkout-size').textContent = selectedSize;
+    document.getElementById('checkout-quantity').textContent = currentQuantity;
+    document.getElementById('checkout-total').textContent = total.toFixed(2);
+
+    document.getElementById('checkoutModal').style.display = 'flex';
+    cardElement.mount('#card-element');
+}
+
+function closeCheckoutModal() {
+    document.getElementById('checkoutModal').style.display = 'none';
+    cardElement.unmount();
+}
+
+// Checkout form submission
+document.getElementById('checkout-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    if (!selectedSize) {
+        alert('Please select a size');
+        return;
+    }
+
+    const submitButton = document.querySelector('#checkout-form button[type="submit"]');
+    submitButton.disabled = true;
+    document.getElementById('button-text').style.display = 'none';
+    document.querySelector('#checkout-form .spinner').style.display = 'inline-block';
+
+    try {
+        // First add to cart if not already done
+        await fetch('/add_to_cart', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                product_id: '{{ product.id }}',
+                size: selectedSize,
+                quantity: currentQuantity
+            })
+        });
+
+        // Create payment intent
+        const response = await fetch('/create-payment-intent', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                type: 'purchase'
+            })
+        });
+
+        const {clientSecret} = await response.json();
+
+        // Confirm payment
+        const {error} = await stripe.confirmCardPayment(clientSecret, {
+            payment_method: {
+                card: cardElement,
+                billing_details: {
+                    name: document.getElementById('customerName').value,
+                    email: document.getElementById('customerEmail').value
+                }
+            }
+        });
+
+        if (error) {
+            document.getElementById('card-errors').textContent = error.message;
+        } else {
+            // Payment successful
+            await fetch('/payment-success', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    type: 'purchase'
+                })
+            });
+
+            alert('Thank you for your purchase! You\'ll receive a confirmation email shortly.');
+            closeCheckoutModal();
+            window.location.href = '/shop';
+        }
+    } catch (error) {
+        document.getElementById('card-errors').textContent = 'An error occurred. Please try again.';
+    } finally {
+        submitButton.disabled = false;
+        document.getElementById('button-text').style.display = 'inline';
+        document.querySelector('#checkout-form .spinner').style.display = 'none';
+    }
+});
+</script>
 {% endblock %}

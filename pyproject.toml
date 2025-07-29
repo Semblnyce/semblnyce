@@ -1,10 +1,12 @@
 [project]
-name = "python-template"
-version = "0.1.0"
-description = ""
-authors = ["Your Name <you@example.com>"]
+name = "semblnyce-streetwear"
+version = "0.2.0"
+description = "Street fashion platform supporting homeless artistsw"
+authors = ["Semblnyce Team <semblnyce@gmail.com>"]
 requires-python = ">=3.11"
 dependencies = [
+    "fla>=0.10.0",
     "flask>=3.1.1",
     "stripe>=12.3.0",
+    "python-dotenv>=1.0.0",
 ]

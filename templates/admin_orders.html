@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Admin - Orders - semblnyce{% endblock %}
+{% block content %}
+<h1 style="text-align: center; margin-bottom: 40px;">ORDER MANAGEMENT</h1>
+
+<div style="margin-bottom: 20px;">
+    <a href="/admin/dashboard" class="btn btn-secondary">← BACK TO DASHBOARD</a>
+</div>
+
+<div class="admin-section">
+    <h2>All Orders ({{ orders|length }} total)</h2>
+
+    {% if orders %}
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Customer Email</th>
+                <th>User ID</th>
+                <th>Items</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>
+                    <strong>{{ order.id[:8] }}...</strong>
+                </td>
+                <td>{{ order.customer_email or 'Unknown' }}</td>
+                <td style="font-size: 0.8rem; color: rgba(255,255,255,0.7);">
+                    {{ order.user_id[:8] if order.user_id else 'N/A' }}...
+                </td>
+                <td>
+                    {% for item in order.items %}
+                    <div style="margin-bottom: 5px; padding: 5px; background: rgba(255,255,255,0.1); border-radius: 3px;">
+                        <strong>{{ item.name }}</strong><br>
+                        <small>Size: {{ item.size }} | Qty: {{ item.quantity }} | ${{ "%.2f"|format(item.price) }} each</small>
+                    </div>
+                    {% endfor %}
+                </td>
+                <td>
+                    <strong>${{ "%.2f"|format(order.total) }}</strong>
+                </td>
+                <td>
+                    <span style="color: #4CAF50; font-weight: 700;">{{ order.status|upper }}</span>
+                </td>
+                <td style="font-size: 0.9rem;">
+                    {{ order.timestamp[:10] }}<br>
+                    <small style="color: rgba(255,255,255,0.7);">{{ order.timestamp[11:19] }}</small>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div style="margin-top: 30px; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 5px;">
+        <h3>Order Summary</h3>
+        <p><strong>Total Orders:</strong> {{ orders|length }}</p>
+        <p><strong>Total Revenue:</strong> ${{ "%.2f"|format(orders|sum(attribute='total')) }}</p>
+        <p><strong>Average Order Value:</strong> ${{ "%.2f"|format((orders|sum(attribute='total') / orders|length) if orders|length > 0 else 0) }}</p>
+    </div>
+
+    {% else %}
+    <p style="text-align: center; padding: 40px; color: rgba(255,255,255,0.7);">No orders have been placed yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

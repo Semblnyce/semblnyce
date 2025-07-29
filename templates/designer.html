@@ -1,25 +1,33 @@
 {% extends "base.html" %}
 {% block title %}{{ designer.name }} - semblnyce{% endblock %}
 {% block content %}
-<h1>{{ designer.name }}</h1>
-
-<div class="designer-info">
-    <p style="font-size: 1.1rem; line-height: 1.8;">{{ designer.bio }}</p>
-
-    {% if designer.video_url %}
-    <div class="video-container">
-        <iframe src="{{ designer.video_url }}" frameborder="0" allowfullscreen></iframe>
+<div class="designer-container">
+    <div class="designer-header">
+        <div class="designer-image">
+            <span>{{ designer.image }}</span>
+        </div>
+        <h1>{{ designer.name }}</h1>
     </div>
-    {% endif %}
 
-    {% if designer.support_link %}
-    <div style="margin-top: 30px; text-align: center;">
-        <a href="{{ designer.support_link }}" class="btn" target="_blank">SUPPORT THIS ARTIST</a>
+    <div class="designer-info">
+        <div class="designer-bio">{{ designer.bio }}</div>
+
+        {% if designer.video_url %}
+        <div class="video-container">
+            <iframe src="{{ designer.video_url }}" frameborder="0" allowfullscreen></iframe>
+        </div>
+        {% endif %}
+
+        {% if designer.support_link %}
+        <div style="margin-top: 30px; text-align: center;">
+            <a href="{{ designer.support_link }}" class="btn" target="_blank">SUPPORT THIS ARTIST</a>
+        </div>
+        {% endif %}
     </div>
-    {% endif %}
-</div>
 
-<div style="margin-top: 40px;">
-    <a href="/shop" class="btn btn-secondary">BACK TO SHOP</a>
+    <div style="margin-top: 40px; text-align: center;">
+        <a href="javascript:history.back()" class="btn btn-secondary">← GO BACK</a>
+        <a href="/shop" class="btn btn-secondary" style="margin-left: 10px;">VIEW ALL PRODUCTS</a>
+    </div>
 </div>
 {% endblock %}
