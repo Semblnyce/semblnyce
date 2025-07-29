@@ -216,7 +216,7 @@ def product(product_id):
     product = next((p for p in PRODUCTS if p['id'] == product_id), None)
     if not product:
         return redirect(url_for('shop'))
-    return render_template('product.html', product=product)
+    return render_template('product.html', product=product, stripe_public_key=STRIPE_PUBLISHABLE_KEY)
 
 @app.route('/add_to_cart', methods=['POST'])
 def add_to_cart():
