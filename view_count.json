@@ -1,8 +1,8 @@
 {
-  "total": 381,
+  "total": 385,
   "pages": {
-    "home": 203,
-    "shop": 59,
+    "home": 204,
+    "shop": 60,
     "contact": 21,
     "about": 13,
     "donate": 12,
@@ -10,6 +10,6 @@
     "product_1": 3,
     "product_2": 3,
     "designer_2": 3,
-    "cart": 61
+    "cart": 63
   }
 }
