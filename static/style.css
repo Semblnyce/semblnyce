@@ -379,6 +379,12 @@ select option {
     font-size: 1rem;
     color: #ffffff;
     border-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.product-card:hover .product-price-overlay {
+    opacity: 1;
 }
 
 .product-details {
