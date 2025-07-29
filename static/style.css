@@ -123,6 +123,7 @@ nav {
 /* Mobile Navigation */
 .mobile-nav {
     display: none;
+    position: relative;
 }
 
 .hamburger {
@@ -133,6 +134,7 @@ nav {
     width: 30px;
     height: 30px;
     position: relative;
+    display: flex;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
