@@ -1,7 +1,7 @@
 {
-  "total": 373,
+  "total": 375,
   "pages": {
-    "home": 201,
+    "home": 202,
     "shop": 57,
     "contact": 21,
     "about": 13,
@@ -10,6 +10,6 @@
     "product_1": 3,
     "product_2": 3,
     "designer_2": 3,
-    "cart": 57
+    "cart": 58
   }
 }
