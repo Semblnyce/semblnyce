@@ -13,7 +13,6 @@ app.secret_key = 'semblnyce_secret_key_2024'
 stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
 STRIPE_PUBLISHABLE_KEY = os.getenv('STRIPE_PUBLISHABLE_KEY')
 
-# Admin email addresses - only these can access admin panel
 ADMIN_EMAILS = [
     'semblnyce@gmail.com',
     'rahibh2010@gmail.com',  
@@ -135,7 +134,7 @@ PRODUCTS = [
     {
         'id': '2',
         'name': 'STREET GHOST HOODIE',
-        'price': 85,
+        'price': 45,
         'image': '👻',
         'designer_id': '2',
         'description': 'A haunting design that captures the invisible struggles of city life. This premium hoodie features unique artwork that tells the story of those who walk unseen through urban landscapes.',
@@ -144,7 +143,7 @@ PRODUCTS = [
     {
         'id': '3',
         'name': 'NEON REBELLION TANK',
-        'price': 35,
+        'price': 45,
         'image': '⚡',
         'designer_id': '3',
         'description': 'Electric energy meets street fashion in this bold tank top. Perfect for those who want to make a statement while supporting artists in need.',
@@ -490,5 +489,77 @@ if __name__ == '__main__':
     print("Admin dashboard: /admin/dashboard")
     print("Admin orders: /admin/orders")
     print("Contact submissions: /admin/contacts")
+
+
+    @app.route('/create-checkout-session', methods=['POST'])
+    def create_checkout_session():
+        cart_items = session.get('cart', [])
+        if not cart_items:
+            return jsonify({'error': 'Cart is empty'}), 400
+
+        try:
+            line_items = []
+            for item in cart_items:
+                line_items.append({
+                    'price_data': {
+                        'currency': 'usd',
+                        'unit_amount': int(item['price'] * 100),
+                        'product_data': {
+                            'name': f"{item['name']} (Size: {item['size']})"
+                        },
+                    },
+                    'quantity': item['quantity'],
+                })
+
+            session_obj = stripe.checkout.Session.create(
+                payment_method_types=['card'],
+                line_items=line_items,
+                mode='payment',
+                success_url=url_for('checkout_success', _external=True),
+                cancel_url=url_for('cart', _external=True),
+                metadata={
+                    'user_id': get_user_identifier()
+                }
+            )
+
+            return redirect(session_obj.url, code=303)
+
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+
+
+    @app.route('/checkout-success')
+    def checkout_success():
+        cart_items = session.get('cart', [])
+        if not cart_items:
+            return render_template('success.html', message="No cart data found.")
+
+        total = sum(item['price'] * item['quantity'] for item in cart_items)
+        user_identifier = get_user_identifier()
+
+        # Record the order
+        orders = load_orders()
+        order = {
+            'id': str(uuid.uuid4()),
+            'user_id': user_identifier,
+            'customer_email': session.get('google_email', 'Unknown'),
+            'items': cart_items.copy(),
+            'total': total,
+            'timestamp': datetime.now().isoformat(),
+            'status': 'completed'
+        }
+        orders.append(order)
+        save_orders(orders)
+
+        # Update analytics
+        analytics = load_analytics()
+        analytics['total_revenue'] += total
+        save_analytics(analytics)
+
+        # Clear cart
+        session['cart'] = []
+        session.modified = True
+
+        return render_template('success.html', message="Thanks for your order! 🎉")
 
     app.run(host='0.0.0.0', port=5000, debug=True)

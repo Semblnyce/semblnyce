@@ -38,7 +38,7 @@
     },
     "db0c233f-ac81-4bbc-baa3-32872a8b143b": {
       "first_visit": "2025-07-29",
-      "visit_count": 5
+      "visit_count": 34
     }
   },
   "returning_users": [
@@ -51,7 +51,8 @@
   ],
   "daily_views": {
     "2025-07-28": 74,
-    "2025-07-29": 84
+    "2025-07-29": 84,
+    "2025-07-31": 29
   },
   "total_revenue": 0
 }
