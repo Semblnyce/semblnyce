@@ -39,8 +39,16 @@ ORDERS_FILE = 'orders.json'
 
 def load_json_file(filename, default):
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
-            return json.load(f)
+        try:
+            with open(filename, 'r') as f:
+                content = f.read().strip()
+                if not content:  # Empty file
+                    return default
+                return json.loads(content)
+        except (json.JSONDecodeError, ValueError):
+            # If JSON is corrupted, return default and recreate file
+            save_json_file(filename, default)
+            return default
     return default
 
 def save_json_file(filename, data):
