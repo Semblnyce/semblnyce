@@ -1,74 +1,20 @@
 {
   "unique_visitors": {
-    "cf168079-66cb-4283-87a0-9a0972889d0d": {
-      "first_visit": "2025-07-28",
-      "visit_count": 2
-    },
-    "a170a710-6d6d-4032-8070-b62ccfc297cb": {
-      "first_visit": "2025-07-28",
-      "visit_count": 3
-    },
-    "819b2143-69d5-4e06-bced-d43554a2da59": {
-      "first_visit": "2025-07-28",
-      "visit_count": 1
-    },
-    "4873ed86-1a02-4cf6-b551-2a101e4221c6": {
-      "first_visit": "2025-07-28",
-      "visit_count": 2
-    },
-    "936dd533-0890-4c0b-801f-525bab81b4bc": {
-      "first_visit": "2025-07-28",
-      "visit_count": 1
-    },
-    "bef67713-9b14-4e51-a725-bd7422d6fd99": {
-      "first_visit": "2025-07-28",
-      "visit_count": 1
-    },
-    "1defe522-045c-461c-88f8-eee88de91822": {
-      "first_visit": "2025-07-28",
-      "visit_count": 2
-    },
-    "46a82b7e-db24-4f8e-a2f0-c73f1961af99": {
-      "first_visit": "2025-07-29",
-      "visit_count": 2
-    },
-    "465161fb-01bb-4ccc-9dba-3d0df9f48334": {
-      "first_visit": "2025-07-29",
-      "visit_count": 61
-    },
     "db0c233f-ac81-4bbc-baa3-32872a8b143b": {
-      "first_visit": "2025-07-29",
-      "visit_count": 56
-    },
-    "cfa45d1f-4141-4522-a5bb-8af6b41ba1e7": {
       "first_visit": "2025-08-01",
-      "visit_count": 14
-    },
-    "84614c0b-8b12-464a-9a19-217e7c88a88a": {
-      "first_visit": "2025-08-01",
-      "visit_count": 76
+      "visit_count": 3
     },
     "18972ef8-2aab-438a-a3d4-8e7d5ea2fa45": {
       "first_visit": "2025-08-01",
-      "visit_count": 22
+      "visit_count": 3
     }
   },
   "returning_users": [
-    "a170a710-6d6d-4032-8070-b62ccfc297cb",
-    "4873ed86-1a02-4cf6-b551-2a101e4221c6",
-    "1defe522-045c-461c-88f8-eee88de91822",
-    "46a82b7e-db24-4f8e-a2f0-c73f1961af99",
-    "465161fb-01bb-4ccc-9dba-3d0df9f48334",
-    "db0c233f-ac81-4bbc-baa3-32872a8b143b",
-    "cfa45d1f-4141-4522-a5bb-8af6b41ba1e7",
-    "84614c0b-8b12-464a-9a19-217e7c88a88a",
-    "18972ef8-2aab-438a-a3d4-8e7d5ea2fa45"
+    "18972ef8-2aab-438a-a3d4-8e7d5ea2fa45",
+    "db0c233f-ac81-4bbc-baa3-32872a8b143b"
   ],
   "daily_views": {
-    "2025-07-28": 74,
-    "2025-07-29": 84,
-    "2025-07-31": 35,
-    "2025-08-01": 128
+    "2025-08-01": 6
   },
   "total_revenue": 0
 }
