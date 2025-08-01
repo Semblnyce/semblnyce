@@ -402,26 +402,26 @@ select option {
 
 /* Product Page Styles */
 .product-container {
-    max-width: 900px;
+    max-width: 1200px;
     margin: 0 auto;
 }
 
 .product-main {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1.5fr 1fr;
     gap: 40px;
     margin-bottom: 40px;
 }
 
 .product-image-large {
     width: 100%;
-    height: 400px;
+    height: 500px;
     background: #111111;
     border: 2px solid #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 8rem;
+    font-size: 10rem;
     color: #ffffff;
 }
 
@@ -615,7 +615,26 @@ select option {
 .cart-item-controls {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
+}
+
+.btn-small {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    min-width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cart-item-controls .btn-small {
+    padding: 4px 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    min-width: 28px;
+    height: 28px;
+    border-width: 1px;
 }
 
 .cart-item-quantity {
@@ -816,8 +835,8 @@ select option {
     }
 
     .product-image-large {
-        height: 300px;
-        font-size: 6rem;
+        height: 350px;
+        font-size: 7rem;
     }
 
     .product-actions {
@@ -879,8 +898,8 @@ select option {
     }
 
     .product-image-large {
-        height: 250px;
-        font-size: 4rem;
+        height: 300px;
+        font-size: 5rem;
     }
 
     .content-box {

@@ -42,31 +42,7 @@
     </div>
 </div>
 
-<!-- Checkout Modal -->
-<div id="checkoutModal" style="display: none;" class="payment-modal">
-    <div class="payment-form">
-        <h2>COMPLETE YOUR ORDER</h2>
-        <div id="order-summary" style="margin-bottom: 30px;">
-            <p><strong>{{ product.name }}</strong></p>
-            <p>Size: <span id="checkout-size">-</span></p>
-            <p>Quantity: <span id="checkout-quantity">1</span></p>
-            <p style="font-size: 1.2rem; margin-top: 15px;">Total: $<span id="checkout-total">{{ product.price }}</span></p>
-        </div>
 
-        <form id="checkout-form">
-            <input type="text" id="customerName" placeholder="YOUR NAME" required>
-            <input type="email" id="customerEmail" placeholder="YOUR EMAIL" required>
-            <div id="card-element"></div>
-            <div id="card-errors" style="color: red; margin-bottom: 20px;"></div>
-            <button type="submit" class="btn btn-large" style="width: 100%;">
-                <span id="button-text">COMPLETE PURCHASE</span>
-                <span class="spinner" style="display: none;"></span>
-            </button>
-        </form>
-
-        <button onclick="closeCheckoutModal()" class="btn btn-secondary" style="margin-top: 10px; width: 100%;">CANCEL</button>
-    </div>
-</div>
 
 <script src="https://js.stripe.com/v3/"></script>
 <script>
@@ -107,11 +83,15 @@ function changeQuantity(change) {
     }
 }
 
+// Add to cart function
 function addToCart() {
+    const selectedSize = document.querySelector('.size-option.selected');
     if (!selectedSize) {
         alert('Please select a size');
         return;
     }
+
+    const quantity = parseInt(document.querySelector('.quantity-display').textContent);
 
     fetch('/add_to_cart', {
         method: 'POST',
@@ -120,125 +100,24 @@ function addToCart() {
         },
         body: JSON.stringify({
             product_id: '{{ product.id }}',
-            size: selectedSize,
-            quantity: currentQuantity
+            size: selectedSize.dataset.size,
+            quantity: quantity
         })
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
+            // Update cart count in navigation
             document.getElementById('cartCount').textContent = data.cart_count;
-            const mobileCartCount = document.querySelector('.mobile-cart-count');
-            if (mobileCartCount) {
-                mobileCartCount.textContent = data.cart_count;
-            }
-
-            // Ask if user wants to checkout now or continue shopping
-            if (confirm('Added to cart! Would you like to checkout now?')) {
-                openCheckoutModal();
-            }
+            alert('Item added to cart!');
         } else {
-            alert('Error adding to cart');
+            alert('Error adding item to cart');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Error adding to cart');
+        alert('Error adding item to cart');
     });
 }
-
-function openCheckoutModal() {
-    if (!selectedSize) {
-        alert('Please select a size');
-        return;
-    }
-
-    const total = {{ product.price }} * currentQuantity;
-
-    document.getElementById('checkout-size').textContent = selectedSize;
-    document.getElementById('checkout-quantity').textContent = currentQuantity;
-    document.getElementById('checkout-total').textContent = total.toFixed(2);
-
-    document.getElementById('checkoutModal').style.display = 'flex';
-    cardElement.mount('#card-element');
-}
-
-function closeCheckoutModal() {
-    document.getElementById('checkoutModal').style.display = 'none';
-    cardElement.unmount();
-}
-
-// Checkout form submission
-document.getElementById('checkout-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    if (!selectedSize) {
-        alert('Please select a size');
-        return;
-    }
-
-    const submitButton = document.querySelector('#checkout-form button[type="submit"]');
-    submitButton.disabled = true;
-    document.getElementById('button-text').style.display = 'none';
-    document.querySelector('#checkout-form .spinner').style.display = 'inline-block';
-
-    try {
-        // First add to cart if not already done
-        await fetch('/add_to_cart', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                product_id: '{{ product.id }}',
-                size: selectedSize,
-                quantity: currentQuantity
-            })
-        });
-
-        // Create payment intent
-        const response = await fetch('/create-payment-intent', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                type: 'purchase'
-            })
-        });
-
-        const {clientSecret} = await response.json();
-
-        // Confirm payment
-        const {error} = await stripe.confirmCardPayment(clientSecret, {
-            payment_method: {
-                card: cardElement,
-                billing_details: {
-                    name: document.getElementById('customerName').value,
-                    email: document.getElementById('customerEmail').value
-                }
-            }
-        });
-
-        if (error) {
-            document.getElementById('card-errors').textContent = error.message;
-        } else {
-            // Payment successful
-            await fetch('/payment-success', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    type: 'purchase'
-                })
-            });
-
-            alert('Thank you for your purchase! You\'ll receive a confirmation email shortly.');
-            closeCheckoutModal();
-            window.location.href = '/shop';
-        }
-    } catch (error) {
-        document.getElementById('card-errors').textContent = 'An error occurred. Please try again.';
-    } finally {
-        submitButton.disabled = false;
-        document.getElementById('button-text').style.display = 'inline';
-        document.querySelector('#checkout-form .spinner').style.display = 'none';
-    }
-});
 </script>
 {% endblock %}
