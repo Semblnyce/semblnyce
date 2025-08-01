@@ -1,15 +1,15 @@
 {
-  "total": 465,
+  "total": 475,
   "pages": {
-    "home": 234,
-    "shop": 66,
+    "home": 236,
+    "shop": 67,
     "contact": 21,
     "about": 13,
     "donate": 12,
     "designer_1": 3,
-    "product_1": 5,
+    "product_1": 6,
     "product_2": 3,
     "designer_2": 3,
-    "cart": 105
+    "cart": 111
   }
 }
