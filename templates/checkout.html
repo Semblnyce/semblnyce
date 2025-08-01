@@ -7,53 +7,6 @@
 <div class="checkout-container">
     <h1>CHECKOUT</h1>
     
-    <div class="checkout-sections">
-        <div class="shipping-section">
-            <h2>SHIPPING INFORMATION</h2>
-            <form id="shipping-form">
-                <div class="form-group">
-                    <input type="text" id="fullName" placeholder="FULL NAME" required>
-                </div>
-                <div class="form-group">
-                    <input type="email" id="email" placeholder="EMAIL" required>
-                </div>
-                <div class="form-group">
-                    <input type="tel" id="phone" placeholder="PHONE NUMBER">
-                </div>
-                <div class="form-group">
-                    <input type="text" id="address1" placeholder="ADDRESS LINE 1" required>
-                </div>
-                <div class="form-group">
-                    <input type="text" id="address2" placeholder="ADDRESS LINE 2 (OPTIONAL)">
-                </div>
-                <div class="form-row">
-                    <input type="text" id="city" placeholder="CITY" required>
-                    <input type="text" id="state" placeholder="STATE" required>
-                    <input type="text" id="zip" placeholder="ZIP CODE" required>
-                </div>
-                <div class="form-group">
-                    <select id="country" required>
-                        <option value="US">United States</option>
-                        <option value="CA">Canada</option>
-                        <option value="GB">United Kingdom</option>
-                        <!-- Add more countries as needed -->
-                    </select>
-                </div>
-            </form>
-        </div>
-
-        <div class="payment-section">
-            <h2>PAYMENT</h2>
-            <div id="card-element"></div>
-            <div id="card-errors" role="alert"></div>
-            
-            <button id="submit-payment" class="btn">
-                <span id="button-text">COMPLETE ORDER ($<span id="total-amount">0</span>)</span>
-                <span class="spinner" style="display: none;"></span>
-            </button>
-        </div>
-    </div>
-
     <div class="order-summary">
         <h2>ORDER SUMMARY</h2>
         <div id="order-items">
@@ -68,168 +21,31 @@
             <strong>Total: ${{ "%.2f"|format(total) }}</strong>
         </div>
     </div>
+
+    <div class="payment-section">
+        <h2>PROCEED TO PAYMENT</h2>
+        <p>You will be redirected to Stripe's secure checkout page to complete your payment.</p>
+        
+        <form action="/create-checkout-session" method="POST">
+            <button type="submit" class="btn btn-large">
+                CHECKOUT WITH STRIPE (${{ "%.2f"|format(total) }})
+            </button>
+        </form>
+    </div>
 </div>
-
-<script src="https://js.stripe.com/v3/"></script>
-<script>
-const stripe = Stripe('{{ stripe_public_key }}');
-const elements = stripe.elements();
-const cardElement = elements.create('card', {
-    style: {
-        base: {
-            color: '#ffffff',
-            fontFamily: '"Inter", sans-serif',
-            fontSize: '16px',
-            '::placeholder': {
-                color: '#666666'
-            }
-        }
-    }
-});
-
-cardElement.mount('#card-element');
-
-// Handle form submission
-document.getElementById('submit-payment').addEventListener('click', async (event) => {
-    event.preventDefault();
-    
-    const submitButton = document.getElementById('submit-payment');
-    const buttonText = document.getElementById('button-text');
-    const spinner = document.querySelector('.spinner');
-    
-    submitButton.disabled = true;
-    buttonText.style.display = 'none';
-    spinner.style.display = 'inline-block';
-
-    try {
-        // Create payment intent
-        const response = await fetch('/create-payment-intent', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'}
-        });
-
-        const {clientSecret} = await response.json();
-
-        // Confirm payment
-        const {error, paymentIntent} = await stripe.confirmCardPayment(clientSecret, {
-            payment_method: {
-                card: cardElement,
-                billing_details: {
-                    name: document.getElementById('fullName').value,
-                    email: document.getElementById('email').value,
-                    phone: document.getElementById('phone').value,
-                    address: {
-                        line1: document.getElementById('address1').value,
-                        line2: document.getElementById('address2').value,
-                        city: document.getElementById('city').value,
-                        state: document.getElementById('state').value,
-                        postal_code: document.getElementById('zip').value,
-                        country: document.getElementById('country').value
-                    }
-                }
-            }
-        });
-
-        if (error) {
-            document.getElementById('card-errors').textContent = error.message;
-            submitButton.disabled = false;
-            buttonText.style.display = 'inline';
-            spinner.style.display = 'none';
-        } else {
-            // Payment successful, notify backend
-            await fetch('/payment-success', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    payment_intent_id: paymentIntent.id,
-                    name: document.getElementById('fullName').value,
-                    email: document.getElementById('email').value,
-                    phone: document.getElementById('phone').value,
-                    address1: document.getElementById('address1').value,
-                    address2: document.getElementById('address2').value,
-                    city: document.getElementById('city').value,
-                    state: document.getElementById('state').value,
-                    zip: document.getElementById('zip').value,
-                    country: document.getElementById('country').value
-                })
-            });
-            
-            window.location.href = '/checkout-success';
-        }
-    } catch (error) {
-        document.getElementById('card-errors').textContent = 'An error occurred. Please try again.';
-        submitButton.disabled = false;
-        buttonText.style.display = 'inline';
-        spinner.style.display = 'none';
-    }
-});
-
-// Handle payment cancellation (when user navigates away)
-window.addEventListener('beforeunload', async () => {
-    // Notify backend of cancellation if payment was in progress
-    const pendingOrder = sessionStorage.getItem('pendingPayment');
-    if (pendingOrder) {
-        await fetch('/payment-cancelled', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                payment_intent_id: pendingOrder
-            })
-        });
-        sessionStorage.removeItem('pendingPayment');
-    }
-});
-
-// Set total amount
-document.getElementById('total-amount').textContent = '{{ "%.2f"|format(total) }}';
-</script>
 
 <style>
 .checkout-container {
-    max-width: 1200px;
+    max-width: 800px;
     margin: 0 auto;
     padding: 40px 20px;
-}
-
-.checkout-sections {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
-    margin: 40px 0;
-}
-
-.shipping-section, .payment-section {
-    background: #111;
-    border: 2px solid #fff;
-    padding: 30px;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.form-group input, .form-group select, .form-row input {
-    width: 100%;
-    padding: 15px;
-    background: #000;
-    color: #fff;
-    border: 1px solid #fff;
-    font-family: 'Inter', sans-serif;
-    font-size: 16px;
 }
 
 .order-summary {
     background: #111;
     border: 2px solid #fff;
     padding: 30px;
-    margin-top: 20px;
+    margin-bottom: 30px;
 }
 
 .order-item {
@@ -245,26 +61,16 @@ document.getElementById('total-amount').textContent = '{{ "%.2f"|format(total) }
     font-size: 1.2rem;
 }
 
-#card-element {
-    padding: 15px;
-    background: #000;
-    border: 1px solid #fff;
-    margin-bottom: 20px;
+.payment-section {
+    background: #111;
+    border: 2px solid #fff;
+    padding: 30px;
+    text-align: center;
 }
 
-#card-errors {
-    color: #ff6b6b;
-    margin-top: 10px;
-}
-
-@media (max-width: 768px) {
-    .checkout-sections {
-        grid-template-columns: 1fr;
-    }
-    
-    .form-row {
-        grid-template-columns: 1fr;
-    }
+.payment-section p {
+    margin-bottom: 30px;
+    color: rgba(255,255,255,0.8);
 }
 </style>
 {% endblock %}

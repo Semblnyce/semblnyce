@@ -1,0 +1,61 @@
+
+{% extends "base.html" %}
+
+{% block title %}Order Complete - semblnyce{% endblock %}
+
+{% block content %}
+<div class="success-container">
+    <div class="success-message">
+        <h1>🎉 ORDER COMPLETE!</h1>
+        <p>{{ message }}</p>
+        
+        <div class="success-actions">
+            <a href="/shop" class="btn">CONTINUE SHOPPING</a>
+            <a href="/" class="btn btn-secondary">BACK TO HOME</a>
+        </div>
+    </div>
+</div>
+
+<style>
+.success-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 100px 20px;
+    text-align: center;
+}
+
+.success-message {
+    background: #111;
+    border: 2px solid #fff;
+    padding: 60px 40px;
+}
+
+.success-message h1 {
+    font-size: 3rem;
+    margin-bottom: 30px;
+}
+
+.success-message p {
+    font-size: 1.2rem;
+    margin-bottom: 40px;
+    color: rgba(255,255,255,0.8);
+}
+
+.success-actions {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 480px) {
+    .success-message h1 {
+        font-size: 2rem;
+    }
+    
+    .success-actions {
+        flex-direction: column;
+    }
+}
+</style>
+{% endblock %}
