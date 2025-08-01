@@ -2,11 +2,11 @@
   "unique_visitors": {
     "db0c233f-ac81-4bbc-baa3-32872a8b143b": {
       "first_visit": "2025-08-01",
-      "visit_count": 3
+      "visit_count": 4
     },
     "18972ef8-2aab-438a-a3d4-8e7d5ea2fa45": {
       "first_visit": "2025-08-01",
-      "visit_count": 3
+      "visit_count": 7
     }
   },
   "returning_users": [
@@ -14,7 +14,7 @@
     "db0c233f-ac81-4bbc-baa3-32872a8b143b"
   ],
   "daily_views": {
-    "2025-08-01": 6
+    "2025-08-01": 11
   },
   "total_revenue": 0
 }
