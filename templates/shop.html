@@ -12,6 +12,7 @@
                 <span class="main-image">{{ product.images[0] }}</span>
                 <div class="product-price-overlay">${{ product.price }}</div>
             </div>
+            {% if product.images|length > 1 %}
             <div class="image-dots">
                 {% for image in product.images %}
                 <span class="dot {% if loop.index0 == 0 %}active{% endif %}" 
@@ -19,6 +20,7 @@
                       data-image="{{ image }}"></span>
                 {% endfor %}
             </div>
+            {% endif %}
         </div>
         <div class="product-details">
             <h3>{{ product.name }}</h3>

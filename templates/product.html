@@ -9,6 +9,7 @@
                 <span>{{ product.images[0] }}</span>
             </div>
             
+            {% if product.images|length > 1 %}
             <div class="image-carousel">
                 {% for image in product.images %}
                 <div class="carousel-image {% if loop.index0 == 0 %}active{% endif %}" 
@@ -17,6 +18,7 @@
                 </div>
                 {% endfor %}
             </div>
+            {% endif %}
         </div>
 
         <div class="product-info">
