@@ -132,9 +132,13 @@ function addToCart() {
         if (data.success) {
             // Update cart count in navigation
             document.getElementById('cartCount').textContent = data.cart_count;
+            const mobileCartCount = document.querySelector('.mobile-cart-count');
+            if (mobileCartCount) {
+                mobileCartCount.textContent = data.cart_count;
+            }
             alert('Item added to cart!');
         } else {
-            alert('Error adding item to cart');
+            alert(data.error || 'Error adding item to cart');
         }
     })
     .catch(error => {

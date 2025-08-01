@@ -225,20 +225,28 @@ def product(product_id):
 def add_to_cart():
     data = request.json
     product_id = data.get('product_id')
-    size = data.get('size', 'M')  # Default to Medium
+    size = data.get('size')
     quantity = int(data.get('quantity', 1))
+
+    if not size:
+        return jsonify({'success': False, 'error': 'Size is required'})
 
     if 'cart' not in session:
         session['cart'] = []
 
     product = next((p for p in PRODUCTS if p['id'] == product_id), None)
     if product:
-        # Check if same product and size already in cart
-        cart_item = next((item for item in session['cart'] 
-                         if item['id'] == product_id and item['size'] == size), None)
+        # Check if same product AND same size already in cart
+        cart_item = None
+        for item in session['cart']:
+            if item['id'] == product_id and item['size'] == size:
+                cart_item = item
+                break
+        
         if cart_item:
             cart_item['quantity'] += quantity
         else:
+            # Add as new item (different size = different cart entry)
             session['cart'].append({
                 'id': product['id'],
                 'name': product['name'],
@@ -247,13 +255,14 @@ def add_to_cart():
                 'size': size,
                 'quantity': quantity
             })
+        
         session.modified = True
         return jsonify({
             'success': True, 
             'cart_count': sum(item['quantity'] for item in session['cart'])
         })
 
-    return jsonify({'success': False})
+    return jsonify({'success': False, 'error': 'Product not found'})
 
 @app.route('/cart')
 def cart():
@@ -269,22 +278,28 @@ def update_cart():
     size = data.get('size')
     action = data.get('action')
 
-    if 'cart' in session:
-        cart_item = next((item for item in session['cart'] 
-                         if item['id'] == product_id and item['size'] == size), None)
+    if 'cart' in session and session['cart']:
+        # Find the specific item by both ID and size
+        cart_item = None
+        for item in session['cart']:
+            if item['id'] == product_id and item['size'] == size:
+                cart_item = item
+                break
+        
         if cart_item:
             if action == 'increase':
                 cart_item['quantity'] += 1
             elif action == 'decrease' and cart_item['quantity'] > 1:
                 cart_item['quantity'] -= 1
             elif action == 'remove':
+                # Remove the specific item (by ID and size)
                 session['cart'] = [item for item in session['cart'] 
                                  if not (item['id'] == product_id and item['size'] == size)]
 
             session.modified = True
             return jsonify({'success': True})
 
-    return jsonify({'success': False})
+    return jsonify({'success': False, 'error': 'Item not found in cart'})
 
 @app.route('/create-payment-intent', methods=['POST'])
 def create_payment_intent():
