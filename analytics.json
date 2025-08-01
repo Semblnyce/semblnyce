@@ -2,19 +2,24 @@
   "unique_visitors": {
     "db0c233f-ac81-4bbc-baa3-32872a8b143b": {
       "first_visit": "2025-08-01",
-      "visit_count": 4
+      "visit_count": 8
     },
     "18972ef8-2aab-438a-a3d4-8e7d5ea2fa45": {
       "first_visit": "2025-08-01",
-      "visit_count": 7
+      "visit_count": 11
+    },
+    "ca6cf48e-f2e2-48cd-b8bc-ed44ee9002e6": {
+      "first_visit": "2025-08-01",
+      "visit_count": 10
     }
   },
   "returning_users": [
     "18972ef8-2aab-438a-a3d4-8e7d5ea2fa45",
-    "db0c233f-ac81-4bbc-baa3-32872a8b143b"
+    "db0c233f-ac81-4bbc-baa3-32872a8b143b",
+    "ca6cf48e-f2e2-48cd-b8bc-ed44ee9002e6"
   ],
   "daily_views": {
-    "2025-08-01": 11
+    "2025-08-01": 29
   },
   "total_revenue": 0
 }
