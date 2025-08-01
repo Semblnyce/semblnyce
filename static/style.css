@@ -588,15 +588,16 @@ select option {
 }
 
 .cart-item-image {
-    width: 80px;
-    height: 80px;
-    border: 1px solid #fff;
+    width: 200px;
+    height: 200px;
+    border: 2px solid #fff;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2rem;
+    font-size: 5rem;
     text-decoration: none;
     color: #ffffff;
+    flex-shrink: 0;
 }
 
 .cart-item-details {
