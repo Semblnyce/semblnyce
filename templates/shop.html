@@ -9,7 +9,11 @@
     <div class="product-card" onclick="window.location.href='/product/{{ product.id }}'">
         <div class="product-image-container">
             <div class="product-image" data-images="{{ product.images|join(',') }}">
+                {% if product.images[0].endswith(('.jpg', '.jpeg', '.png', '.gif', '.webp')) %}
+                <img src="{{ url_for('static', filename=product.images[0]) }}" alt="{{ product.name }}" class="main-image">
+                {% else %}
                 <span class="main-image">{{ product.images[0] }}</span>
+                {% endif %}
                 <div class="product-price-overlay">${{ product.price }}</div>
             </div>
             {% if product.images|length > 1 %}
@@ -48,7 +52,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.classList.add('active');
                 
                 // Update main image
-                mainImage.textContent = this.dataset.image;
+                const imageFile = this.dataset.image;
+                if (imageFile.endsWith('.jpg') || imageFile.endsWith('.jpeg') || imageFile.endsWith('.png') || imageFile.endsWith('.gif') || imageFile.endsWith('.webp')) {
+                    mainImage.innerHTML = `<img src="/static/${imageFile}" alt="Product image" class="main-image">`;
+                } else {
+                    mainImage.textContent = imageFile;
+                }
             });
         });
     });

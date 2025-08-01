@@ -358,17 +358,31 @@ select option {
 }
 
 .product-image {
-    width: 100%;
-    height: 250px;
-    background: #111111;
-    border: 1px solid #ffffff;
-    margin-bottom: 15px;
+    width: 300px;
+    height: 300px;
+    border: 2px solid #fff;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 4rem;
+    font-size: 8rem;
+    text-decoration: none;
     color: #ffffff;
     position: relative;
+    cursor: pointer;
+}
+
+.product-image img,
+.product-image-large img,
+.carousel-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.main-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .image-dots {

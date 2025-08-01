@@ -6,7 +6,11 @@
     <div class="product-main">
         <div class="product-image-section">
             <div class="product-image-large" id="mainProductImage">
+                {% if product.images[0].endswith(('.jpg', '.jpeg', '.png', '.gif', '.webp')) %}
+                <img src="{{ url_for('static', filename=product.images[0]) }}" alt="{{ product.name }}">
+                {% else %}
                 <span>{{ product.images[0] }}</span>
+                {% endif %}
             </div>
             
             {% if product.images|length > 1 %}
@@ -14,7 +18,11 @@
                 {% for image in product.images %}
                 <div class="carousel-image {% if loop.index0 == 0 %}active{% endif %}" 
                      onclick="changeMainImage('{{ image }}', this)">
+                    {% if image.endswith(('.jpg', '.jpeg', '.png', '.gif', '.webp')) %}
+                    <img src="{{ url_for('static', filename=image) }}" alt="{{ product.name }}">
+                    {% else %}
                     <span>{{ image }}</span>
+                    {% endif %}
                 </div>
                 {% endfor %}
             </div>
@@ -78,7 +86,12 @@ const cardElement = elements.create('card', {
 
 function changeMainImage(image, element) {
     // Update main image
-    document.querySelector('#mainProductImage span').textContent = image;
+    const mainImageContainer = document.querySelector('#mainProductImage');
+    if (image.endsWith('.jpg') || image.endsWith('.jpeg') || image.endsWith('.png') || image.endsWith('.gif') || image.endsWith('.webp')) {
+        mainImageContainer.innerHTML = `<img src="/static/${image}" alt="Product image">`;
+    } else {
+        mainImageContainer.innerHTML = `<span>${image}</span>`;
+    }
     
     // Update active carousel image
     document.querySelectorAll('.carousel-image').forEach(img => {
