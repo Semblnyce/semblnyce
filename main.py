@@ -143,7 +143,7 @@ PRODUCTS = [
         'id': '2',
         'name': 'Harmony',
         'price': 45,
-        'images': ['👻', '💀', '🌙', '🖤'],
+        'images': ['harmony.jpeg', 'harmony.jpeg', '🌙', '🖤'],
         'designer_id': '2',
         'description': 'A haunting design that captures the invisible struggles of city life. This premium hoodie features unique artwork that tells the story of those who walk unseen through urban landscapes.',
         'sizes': ['S', 'M', 'L', 'XL', 'XXL']
