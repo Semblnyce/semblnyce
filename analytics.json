@@ -38,7 +38,7 @@
     },
     "db0c233f-ac81-4bbc-baa3-32872a8b143b": {
       "first_visit": "2025-07-29",
-      "visit_count": 40
+      "visit_count": 48
     },
     "cfa45d1f-4141-4522-a5bb-8af6b41ba1e7": {
       "first_visit": "2025-08-01",
@@ -46,7 +46,7 @@
     },
     "84614c0b-8b12-464a-9a19-217e7c88a88a": {
       "first_visit": "2025-08-01",
-      "visit_count": 72
+      "visit_count": 76
     }
   },
   "returning_users": [
@@ -63,7 +63,7 @@
     "2025-07-28": 74,
     "2025-07-29": 84,
     "2025-07-31": 35,
-    "2025-08-01": 86
+    "2025-08-01": 98
   },
   "total_revenue": 0
 }

@@ -126,7 +126,7 @@ PRODUCTS = [
         'id': '1',
         'name': 'Grace',
         'price': 45,
-        'images': ['🔥', '💀', '🖤', '⚡'],
+        'images': ['grace.jpeg', 'grace.jpeg', '🖤', '⚡'],
         'designer_id': '1',
         'description': 'This piece represents the raw energy of street culture, designed by one of our featured artists experiencing homelessness. Made from premium cotton with a bold graphic that speaks to the heart of urban rebellion.',
         'sizes': ['S', 'M', 'L', 'XL', 'XXL']
@@ -144,7 +144,7 @@ PRODUCTS = [
         'id': '3',
         'name': 'Kuta',
         'price': 45,
-        'images': ['⚡', '🌟', '💥', '🔥'],
+        'images': ['sunset.jpeg', 'sunset.jpeg', '💥', '🔥'],
         'designer_id': '3',
         'description': 'Electric energy meets street fashion in this bold tank top. Perfect for those who want to make a statement while supporting artists in need.',
         'sizes': ['S', 'M', 'L', 'XL']
