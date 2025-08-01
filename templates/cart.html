@@ -1,4 +1,3 @@
-
 {% extends "base.html" %}
 
 {% block title %}Cart - semblnyce{% endblock %}
@@ -6,12 +5,14 @@
 {% block content %}
 <div class="content-box">
     <h1>YOUR CART</h1>
-    
+
     {% if cart_items %}
         <div class="cart-items">
             {% for item in cart_items %}
             <div class="cart-item">
-                <div class="cart-item-image">{{ item.image }}</div>
+                <div class="cart-item-image">
+                    <span>{{ item.image if item.image else item.images[0] if item.images else '🛍️' }}</span>
+                </div>
                 <div class="cart-item-details">
                     <h3>{{ item.name }}</h3>
                     <p>Size: {{ item.size }}</p>

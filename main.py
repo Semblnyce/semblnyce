@@ -120,13 +120,13 @@ def increment_view(page):
     # Track visitor analytics
     track_visitor()
 
-# Sample data with sizes
+# Sample data with sizes and multiple images
 PRODUCTS = [
     {
         'id': '1',
         'name': 'RIOT HEART TEE',
         'price': 45,
-        'image': '🔥',
+        'images': ['🔥', '💀', '🖤', '⚡'],
         'designer_id': '1',
         'description': 'This piece represents the raw energy of street culture, designed by one of our featured artists experiencing homelessness. Made from premium cotton with a bold graphic that speaks to the heart of urban rebellion.',
         'sizes': ['S', 'M', 'L', 'XL', 'XXL']
@@ -135,7 +135,7 @@ PRODUCTS = [
         'id': '2',
         'name': 'STREET GHOST HOODIE',
         'price': 45,
-        'image': '👻',
+        'images': ['👻', '💀', '🌙', '🖤'],
         'designer_id': '2',
         'description': 'A haunting design that captures the invisible struggles of city life. This premium hoodie features unique artwork that tells the story of those who walk unseen through urban landscapes.',
         'sizes': ['S', 'M', 'L', 'XL', 'XXL']
@@ -144,7 +144,7 @@ PRODUCTS = [
         'id': '3',
         'name': 'NEON REBELLION TANK',
         'price': 45,
-        'image': '⚡',
+        'images': ['⚡', '🌟', '💥', '🔥'],
         'designer_id': '3',
         'description': 'Electric energy meets street fashion in this bold tank top. Perfect for those who want to make a statement while supporting artists in need.',
         'sizes': ['S', 'M', 'L', 'XL']
@@ -243,7 +243,7 @@ def add_to_cart():
                 'id': product['id'],
                 'name': product['name'],
                 'price': product['price'],
-                'image': product['image'],
+                'image': product['images'][0],
                 'size': size,
                 'quantity': quantity
             })

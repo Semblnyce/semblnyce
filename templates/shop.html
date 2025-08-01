@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 {% block title %}Shop - semblnyce{% endblock %}
 {% block content %}
@@ -6,9 +7,18 @@
 <div class="product-grid">
     {% for product in products %}
     <div class="product-card" onclick="window.location.href='/product/{{ product.id }}'">
-        <div class="product-image">
-            <span>{{ product.image }}</span>
-            <div class="product-price-overlay">${{ product.price }}</div>
+        <div class="product-image-container">
+            <div class="product-image" data-images="{{ product.images|join(',') }}">
+                <span class="main-image">{{ product.images[0] }}</span>
+                <div class="product-price-overlay">${{ product.price }}</div>
+            </div>
+            <div class="image-dots">
+                {% for image in product.images %}
+                <span class="dot {% if loop.index0 == 0 %}active{% endif %}" 
+                      data-index="{{ loop.index0 }}" 
+                      data-image="{{ image }}"></span>
+                {% endfor %}
+            </div>
         </div>
         <div class="product-details">
             <h3>{{ product.name }}</h3>
@@ -16,4 +26,30 @@
     </div>
     {% endfor %}
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const productCards = document.querySelectorAll('.product-card');
+    
+    productCards.forEach(card => {
+        const dots = card.querySelectorAll('.dot');
+        const mainImage = card.querySelector('.main-image');
+        
+        dots.forEach(dot => {
+            dot.addEventListener('click', function(e) {
+                e.stopPropagation(); // Prevent card click
+                
+                // Remove active class from all dots
+                dots.forEach(d => d.classList.remove('active'));
+                
+                // Add active class to clicked dot
+                this.classList.add('active');
+                
+                // Update main image
+                mainImage.textContent = this.dataset.image;
+            });
+        });
+    });
+});
+</script>
 {% endblock %}
