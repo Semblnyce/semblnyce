@@ -358,17 +358,17 @@ select option {
 }
 
 .product-image {
-    width: 300px;
-    height: 300px;
-    border: 2px solid #fff;
+    width: 100%;
+    height: 250px;
+    background: #111111;
+    border: 1px solid #ffffff;
+    margin-bottom: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 8rem;
-    text-decoration: none;
+    font-size: 4rem;
     color: #ffffff;
     position: relative;
-    cursor: pointer;
 }
 
 .product-image img,
@@ -676,14 +676,14 @@ select option {
 }
 
 .cart-item-image {
-    width: 300px;
-    height: 300px;
-    border: 2px solid #fff;
+    width: 100px;
+    height: 100px;
+    background: #111111;
+    border: 1px solid #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 8rem;
-    text-decoration: none;
+    font-size: 2rem;
     color: #ffffff;
     flex-shrink: 0;
 }
