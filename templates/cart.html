@@ -1,3 +1,80 @@
-<form action="/create-checkout-session" method="POST">
-  <button type="submit">Checkout with Stripe</button>
-</form>
+
+{% extends "base.html" %}
+
+{% block title %}Cart - semblnyce{% endblock %}
+
+{% block content %}
+<div class="content-box">
+    <h1>YOUR CART</h1>
+    
+    {% if cart_items %}
+        <div class="cart-items">
+            {% for item in cart_items %}
+            <div class="cart-item">
+                <div class="cart-item-image">{{ item.image }}</div>
+                <div class="cart-item-details">
+                    <h3>{{ item.name }}</h3>
+                    <p>Size: {{ item.size }}</p>
+                    <p>Price: ${{ item.price }}</p>
+                </div>
+                <div class="cart-item-controls">
+                    <button onclick="updateCart('{{ item.id }}', '{{ item.size }}', 'decrease')" class="btn btn-small">-</button>
+                    <span class="cart-item-quantity">{{ item.quantity }}</span>
+                    <button onclick="updateCart('{{ item.id }}', '{{ item.size }}', 'increase')" class="btn btn-small">+</button>
+                    <button onclick="updateCart('{{ item.id }}', '{{ item.size }}', 'remove')" class="btn btn-secondary btn-small" style="margin-left: 10px;">REMOVE</button>
+                </div>
+                <div class="cart-item-total">
+                    ${{ "%.2f"|format(item.price * item.quantity) }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="cart-summary">
+            <div class="cart-total">
+                <strong>TOTAL: ${{ "%.2f"|format(total) }}</strong>
+            </div>
+            <div class="cart-actions">
+                <form action="/create-checkout-session" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-large">CHECKOUT WITH STRIPE</button>
+                </form>
+                <a href="/shop" class="btn btn-secondary" style="margin-left: 10px;">CONTINUE SHOPPING</a>
+            </div>
+        </div>
+    {% else %}
+        <div style="text-align: center; padding: 60px 0;">
+            <h2>Your cart is empty</h2>
+            <p style="margin: 20px 0; color: rgba(255,255,255,0.8);">Add some items from our shop to get started!</p>
+            <a href="/shop" class="btn btn-large">SHOP NOW</a>
+        </div>
+    {% endif %}
+</div>
+
+<script>
+function updateCart(productId, size, action) {
+    fetch('/update_cart', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            product_id: productId,
+            size: size,
+            action: action
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload(); // Refresh page to show updated cart
+        } else {
+            alert('Error updating cart');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error updating cart');
+    });
+}
+</script>
+{% endblock %}
