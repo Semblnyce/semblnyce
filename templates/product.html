@@ -114,7 +114,7 @@ function addToCart() {
         return;
     }
 
-    const quantity = parseInt(document.querySelector('.quantity-display').textContent);
+    const quantity = currentQuantity; // Use the currentQuantity variable instead
 
     fetch('/add_to_cart', {
         method: 'POST',
