@@ -250,7 +250,7 @@ def add_to_cart():
             if item['id'] == product_id and item['size'] == size:
                 cart_item = item
                 break
-        
+
         if cart_item:
             cart_item['quantity'] += quantity
         else:
@@ -263,7 +263,7 @@ def add_to_cart():
                 'size': size,
                 'quantity': quantity
             })
-        
+
         session.modified = True
         return jsonify({
             'success': True, 
@@ -293,7 +293,7 @@ def update_cart():
             if item['id'] == product_id and item['size'] == size:
                 cart_item = item
                 break
-        
+
         if cart_item:
             if action == 'increase':
                 cart_item['quantity'] += 1
@@ -341,6 +341,30 @@ def create_payment_intent():
 
     except Exception as e:
         return jsonify({'error': str(e)}), 403
+
+@app.route('/payment-cancelled', methods=['POST'])
+def payment_cancelled():
+    try:
+        data = request.json
+        payment_intent_id = data.get('payment_intent_id')
+        pending_order = session.get('pending_order')
+
+        if pending_order and pending_order.get('payment_intent_id') == payment_intent_id:
+            external_order_id = pending_order['external_id']
+
+            # Cancel Printify order if it was created
+            cancel_printify_order(external_order_id)
+
+            # Clear pending order
+            session['pending_order'] = None
+            session.modified = True
+
+            return jsonify({'success': True, 'message': 'Order cancelled'})
+
+        return jsonify({'success': False, 'message': 'No matching order found'})
+
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)})
 
 @app.route('/payment-success', methods=['POST'])
 def payment_success():

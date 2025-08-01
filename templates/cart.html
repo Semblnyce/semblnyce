@@ -40,9 +40,7 @@
                 <strong>TOTAL: ${{ "%.2f"|format(total) }}</strong>
             </div>
             <div class="cart-actions">
-                <form action="/create-checkout-session" method="POST" style="display: inline;">
-                    <button type="submit" class="btn btn-large">CHECKOUT WITH STRIPE</button>
-                </form>
+                <a href="/checkout" class="btn btn-large">CHECKOUT</a>
                 <a href="/shop" class="btn btn-secondary" style="margin-left: 10px;">CONTINUE SHOPPING</a>
             </div>
         </div>
