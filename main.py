@@ -3,6 +3,7 @@ from flask_mail import Mail, Message
 import os
 import stripe
 import json
+import requests
 from datetime import datetime, timedelta
 import uuid
 import hashlib
@@ -12,6 +13,11 @@ app.secret_key = 'semblnyce_secret_key_2024'
 
 stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
 STRIPE_PUBLISHABLE_KEY = os.getenv('STRIPE_PUBLISHABLE_KEY')
+
+# Printify configuration
+PRINTIFY_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIzN2Q0YmQzMDM1ZmUxMWU5YTgwM2FiN2VlYjNjY2M5NyIsImp0aSI6IjlmZjY1NjNjZDU0NWNiODc4NGE0ZWU4ZGMyMTEwYTA2ZWI5NGMyNTI0N2QzZTIzOGQ2NTkyZWIxYWU1NTA0NWM3OTVjOTBkZTc5NWQ3ZDhiIiwiaWF0IjoxNzU0MDY4NDUyLjM5MTM4NywibmJmIjoxNzU0MDY4NDUyLjM5MTM5LCJleHAiOjE3ODU2MDQ0NTIuMzc4MTk3LCJzdWIiOiIyMzk2Mzk4NyIsInNjb3BlcyI6WyJzaG9wcy5tYW5hZ2UiLCJzaG9wcy5yZWFkIiwiY2F0YWxvZy5yZWFkIiwib3JkZXJzLnJlYWQiLCJvcmRlcnMud3JpdGUiLCJwcm9kdWN0cy5yZWFkIiwicHJvZHVjdHMud3JpdGUiLCJ3ZWJob29rcy5yZWFkIiwid2ViaG9va3Mud3JpdGUiLCJ1cGxvYWRzLnJlYWQiLCJ1cGxvYWRzLndyaXRlIiwicHJpbnRfcHJvdmlkZXJzLnJlYWQiLCJ1c2VyLmluZm8iXX0.MktA1roiZ-q0AsfhR43Tmu0DyKSaYHRpOzWOhoYwlmAcFOFRPegXDeAZfnrzTwOCWErMjpULzrRF_R7HyRIUAXm8TZmobXvWAstzqy2mc8LW7ikuh8cU3vj-qDnlcIVD_uSuH37CskEFoyd4wkg-UqY7qc9kgRreM4dYx12ii2QNNn1SOlIwqKL5NZLCSm1qajcRT1XDq6avgsYB_DSFJ3KZ3R6cnz4ZXzZN7dKaXPijpllEeeyJIrdwHWNpdc__t1NqSQTsOqNtWaGzohMLgS7lwcWGwp_Fbndy6yJcEm-3U-XxRuB25TD0as1Z0Dtyz2vKz-Znkh8lbicTbvFLzvbi2bUInHeFzEu9DmRiO7a1BM5UXPx1Fc-m6Z5J9VwEr9x6nE_v2MN7Q77kB5lyDG38zmf00Bxxd3Y2SFraInqq2M4wnZUcqCky8wcJqN9g9Spp1MINScRfiuOKIA6ExNo76qLvA8lony6tv9RzSqQ9NgQ5lc3z8RprvUMOUHTdN4i7eOC4MD3h7mNbxwLkgBnNMD109l1xJa3jTjlGfDHUNaRICHRUTXeb97XnKg2A-3WlGXH9zWJWyvfkoITJjX5_fu83y5iDHnAeKDgLN2dB6dyUF3wo8SAxGGye4LX6eEvGMYKHZmTEYILj4g95DjSLH1K0VFgmzD3R9OhJ9sA"
+PRINTIFY_API_URL = "https://api.printify.com/v1"
+PRINTIFY_SHOP_ID = os.getenv('PRINTIFY_SHOP_ID', '23963987')  # Your shop ID
 
 ADMIN_EMAILS = [
     'semblnyce@gmail.com',
@@ -187,6 +193,123 @@ def is_admin():
     """Check if current user is admin"""
     return session.get('google_email') in ADMIN_EMAILS
 
+def create_printify_order(order_data, shipping_info):
+    """Create order in Printify"""
+    headers = {
+        'Authorization': f'Bearer {PRINTIFY_TOKEN}',
+        'Content-Type': 'application/json'
+    }
+
+    # Map cart items to Printify line items
+    line_items = []
+    for item in order_data['items']:
+        # You'll need to map your product IDs to Printify variant IDs
+        # For now, using placeholder values - update these with your actual Printify variant IDs
+        variant_id = get_printify_variant_id(item['id'], item['size'])
+        if variant_id:
+            line_items.append({
+                'product_id': get_printify_product_id(item['id']),
+                'variant_id': variant_id,
+                'quantity': item['quantity']
+            })
+
+    printify_order = {
+        'external_id': order_data['id'],
+        'line_items': line_items,
+        'shipping_method': 1,  # Standard shipping
+        'send_shipping_notification': True,
+        'address_to': {
+            'first_name': shipping_info.get('first_name', ''),
+            'last_name': shipping_info.get('last_name', ''),
+            'email': shipping_info.get('email', ''),
+            'phone': shipping_info.get('phone', ''),
+            'country': shipping_info.get('country', 'US'),
+            'region': shipping_info.get('state', ''),
+            'address1': shipping_info.get('address1', ''),
+            'address2': shipping_info.get('address2', ''),
+            'city': shipping_info.get('city', ''),
+            'zip': shipping_info.get('zip', '')
+        }
+    }
+
+    try:
+        response = requests.post(
+            f'{PRINTIFY_API_URL}/shops/{PRINTIFY_SHOP_ID}/orders.json',
+            headers=headers,
+            json=printify_order
+        )
+        response.raise_for_status()
+        return response.json()
+    except Exception as e:
+        print(f"Error creating Printify order: {e}")
+        return None
+
+def cancel_printify_order(external_order_id):
+    """Cancel order in Printify"""
+    headers = {
+        'Authorization': f'Bearer {PRINTIFY_TOKEN}',
+        'Content-Type': 'application/json'
+    }
+
+    try:
+        # First, find the order by external_id
+        response = requests.get(
+            f'{PRINTIFY_API_URL}/shops/{PRINTIFY_SHOP_ID}/orders.json',
+            headers=headers
+        )
+        
+        if response.status_code == 200:
+            orders = response.json().get('data', [])
+            for order in orders:
+                if order.get('external_id') == external_order_id:
+                    # Cancel the order
+                    cancel_response = requests.post(
+                        f'{PRINTIFY_API_URL}/shops/{PRINTIFY_SHOP_ID}/orders/{order["id"]}/cancel.json',
+                        headers=headers
+                    )
+                    return cancel_response.status_code == 200
+        return False
+    except Exception as e:
+        print(f"Error cancelling Printify order: {e}")
+        return False
+
+def get_printify_product_id(local_product_id):
+    """Map local product ID to Printify product ID"""
+    # Update these mappings with your actual Printify product IDs
+    mapping = {
+        '1': 'your_printify_product_id_1',
+        '2': 'your_printify_product_id_2',
+        '3': 'your_printify_product_id_3'
+    }
+    return mapping.get(local_product_id)
+
+def get_printify_variant_id(local_product_id, size):
+    """Map local product ID and size to Printify variant ID"""
+    # Update these mappings with your actual Printify variant IDs
+    mappings = {
+        '1': {
+            'S': 'variant_id_1_s',
+            'M': 'variant_id_1_m',
+            'L': 'variant_id_1_l',
+            'XL': 'variant_id_1_xl',
+            'XXL': 'variant_id_1_xxl'
+        },
+        '2': {
+            'S': 'variant_id_2_s',
+            'M': 'variant_id_2_m',
+            'L': 'variant_id_2_l',
+            'XL': 'variant_id_2_xl',
+            'XXL': 'variant_id_2_xxl'
+        },
+        '3': {
+            'S': 'variant_id_3_s',
+            'M': 'variant_id_3_m',
+            'L': 'variant_id_3_l',
+            'XL': 'variant_id_3_xl'
+        }
+    }
+    return mappings.get(local_product_id, {}).get(size)
+
 # Routes
 @app.route('/')
 def home():
@@ -279,6 +402,15 @@ def cart():
     total = sum(item['price'] * item['quantity'] for item in cart_items)
     return render_template('cart.html', cart_items=cart_items, total=total)
 
+@app.route('/checkout')
+def checkout():
+    increment_view('checkout')
+    cart_items = session.get('cart', [])
+    if not cart_items:
+        return redirect(url_for('cart'))
+    total = sum(item['price'] * item['quantity'] for item in cart_items)
+    return render_template('checkout.html', cart_items=cart_items, total=total, stripe_public_key=STRIPE_PUBLISHABLE_KEY)
+
 @app.route('/update_cart', methods=['POST'])
 def update_cart():
     data = request.json
@@ -319,6 +451,7 @@ def create_payment_intent():
             return jsonify({'error': 'Cart is empty'}), 400
 
         amount = sum(item['price'] * item['quantity'] for item in cart_items)
+        external_order_id = str(uuid.uuid4())
 
         # Create a PaymentIntent with Stripe
         intent = stripe.PaymentIntent.create(
@@ -326,6 +459,7 @@ def create_payment_intent():
             currency='usd',
             metadata={
                 'user_id': get_user_identifier(),
+                'external_order_id': external_order_id,
                 'items': json.dumps([{
                     'name': item['name'],
                     'size': item['size'],
@@ -334,6 +468,15 @@ def create_payment_intent():
                 } for item in cart_items])
             }
         )
+
+        # Store pending order information in session
+        session['pending_order'] = {
+            'payment_intent_id': intent['id'],
+            'external_id': external_order_id,
+            'cart_items': cart_items.copy(),
+            'total': amount
+        }
+        session.modified = True
 
         return jsonify({
             'clientSecret': intent['client_secret']
@@ -369,6 +512,7 @@ def payment_cancelled():
 @app.route('/payment-success', methods=['POST'])
 def payment_success():
     try:
+        data = request.json
         cart_items = session.get('cart', [])
         if not cart_items:
             return jsonify({'success': False, 'message': 'Cart is empty'})
@@ -376,19 +520,42 @@ def payment_success():
         total = sum(item['price'] * item['quantity'] for item in cart_items)
         user_identifier = get_user_identifier()
 
+        # Extract shipping information
+        shipping_info = {
+            'first_name': data.get('name', '').split(' ')[0] if data.get('name') else '',
+            'last_name': ' '.join(data.get('name', '').split(' ')[1:]) if data.get('name') and len(data.get('name', '').split(' ')) > 1 else '',
+            'email': data.get('email', ''),
+            'phone': data.get('phone', ''),
+            'address1': data.get('address1', ''),
+            'address2': data.get('address2', ''),
+            'city': data.get('city', ''),
+            'state': data.get('state', ''),
+            'zip': data.get('zip', ''),
+            'country': data.get('country', 'US')
+        }
+
         # Record the order
         orders = load_orders()
         order = {
             'id': str(uuid.uuid4()),
             'user_id': user_identifier,
-            'customer_email': session.get('google_email', 'Unknown'),
+            'customer_email': session.get('google_email', shipping_info['email']),
             'items': cart_items.copy(),
             'total': total,
             'timestamp': datetime.now().isoformat(),
-            'status': 'completed'
+            'status': 'completed',
+            'shipping_info': shipping_info,
+            'payment_intent_id': data.get('payment_intent_id')
         }
         orders.append(order)
         save_orders(orders)
+
+        # Create Printify order
+        printify_result = create_printify_order(order, shipping_info)
+        if printify_result:
+            print(f"Printify order created successfully: {printify_result}")
+        else:
+            print("Failed to create Printify order")
 
         # Update analytics
         analytics = load_analytics()
