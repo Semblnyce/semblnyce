@@ -4,7 +4,11 @@
 <div class="designer-container">
     <div class="designer-header">
         <div class="designer-image">
-            <img src="{{ designer.image }}" alt="{{ designer.name }}">
+            {% if designer.image.endswith(('.jpg', '.jpeg', '.png', '.gif', '.webp')) %}
+            <img src="{{ url_for('static', filename=designer.image) }}" alt="{{ designer.name }}">
+            {% else %}
+            <span>{{ designer.image }}</span>
+            {% endif %}
         </div>
         <h1>{{ designer.name }}</h1>
     </div>
