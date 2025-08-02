@@ -11,7 +11,7 @@
             {% for item in cart_items %}
             <div class="cart-item">
                 <div class="cart-item-image">
-                    {% if item.image.endswith(('.jpg', '.jpeg', '.png', '.gif', '.webp')) %}
+                    {% if item.image and item.image.endswith(('.jpg', '.jpeg', '.png', '.gif', '.webp')) %}
                     <img src="{{ url_for('static', filename=item.image) }}" alt="{{ item.name }}">
                     {% else %}
                     <span>{{ item.image if item.image else '🛍️' }}</span>

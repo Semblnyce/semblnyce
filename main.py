@@ -377,12 +377,19 @@ def add_to_cart():
         if cart_item:
             cart_item['quantity'] += quantity
         else:
+            # Find the first actual image file (not emoji)
+            first_image = product['images'][0]
+            for img in product['images']:
+                if img.endswith(('.jpg', '.jpeg', '.png', '.gif', '.webp')):
+                    first_image = img
+                    break
+            
             # Add as new item (different size = different cart entry)
             session['cart'].append({
                 'id': product['id'],
                 'name': product['name'],
                 'price': product['price'],
-                'image': product['images'][0],
+                'image': first_image,
                 'size': size,
                 'quantity': quantity
             })
