@@ -1,12 +1,12 @@
 {
-  "total": 123,
+  "total": 133,
   "pages": {
-    "cart": 69,
-    "home": 27,
-    "shop": 12,
-    "product_1": 7,
+    "cart": 74,
+    "home": 29,
+    "shop": 13,
+    "product_1": 8,
     "checkout": 3,
-    "designer_1": 4,
+    "designer_1": 5,
     "designer_alia.jpeg": 1
   }
 }
