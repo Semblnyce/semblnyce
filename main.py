@@ -140,27 +140,27 @@ PRODUCTS = [
         'id': '1',
         'name': 'Grace',
         'price': 45,
-        'images': ['grace.jpeg', 'grace.jpeg', '🖤', '⚡'],
+        'images': ['grace2.jpeg', 'grace1.jpeg', 'grace3.jpeg', 'grace4.jpeg'],
         'designer_id': '1',
-        'description': 'This piece represents the raw energy of street culture, designed by one of our featured artists experiencing homelessness. Made from premium cotton with a bold graphic that speaks to the heart of urban rebellion.',
+        'description': 'The Yin&Yang of the Sum and Moon references the earths elements and it\'s harmony of balance. It expressed liberation, freedom, love, and joy.',
         'sizes': ['S', 'M', 'L', 'XL', 'XXL']
     },
     {
         'id': '2',
         'name': 'Harmony',
         'price': 45,
-        'images': ['harmony.jpeg', 'harmony.jpeg', '🌙', '🖤'],
+        'images': ['download.jpg', 'harmony.jpeg', '🌙', '🖤'],
         'designer_id': '2',
-        'description': 'A haunting design that captures the invisible struggles of city life. This premium hoodie features unique artwork that tells the story of those who walk unseen through urban landscapes.',
+        'description': 'WIP',
         'sizes': ['S', 'M', 'L', 'XL', 'XXL']
     },
     {
         'id': '3',
         'name': 'Kuta',
         'price': 45,
-        'images': ['sunset.jpeg', 'sunset.jpeg', '💥', '🔥'],
+        'images': ['sunset1.jpg', 'sunset.jpeg', '💥', '🔥'],
         'designer_id': '3',
-        'description': 'Electric energy meets street fashion in this bold tank top. Perfect for those who want to make a statement while supporting artists in need.',
+        'description': 'Painting of the beach of Kunta. WIP',
         'sizes': ['S', 'M', 'L', 'XL']
     },
 ]

@@ -1,11 +1,11 @@
 {
-  "total": 60,
+  "total": 96,
   "pages": {
-    "cart": 36,
-    "home": 14,
-    "shop": 4,
-    "product_1": 4,
-    "checkout": 1,
-    "designer_1": 1
+    "cart": 56,
+    "home": 22,
+    "shop": 8,
+    "product_1": 5,
+    "checkout": 3,
+    "designer_1": 2
   }
 }
