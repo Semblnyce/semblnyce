@@ -1,9 +1,10 @@
 {
-  "total": 32,
+  "total": 48,
   "pages": {
-    "cart": 21,
-    "home": 9,
-    "shop": 1,
-    "product_1": 1
+    "cart": 30,
+    "home": 12,
+    "shop": 3,
+    "product_1": 2,
+    "checkout": 1
   }
 }

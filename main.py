@@ -169,23 +169,23 @@ DESIGNERS = {
     '1': {
         'name': 'Kyree and Alia',
         'bio': 'Marcus has been creating art on the streets for over a decade. His designs capture the raw energy and emotion of urban life, transforming pain into powerful visual statements. Born and raised in downtown LA, Marcus found solace in art during his most challenging times. His work reflects the struggle and resilience of those living on the margins of society.',
-        'image': '🎨',  # Placeholder - replace with actual image path
+        'image': 'alia.jpeg',  # Placeholder - replace with actual image path
         'video_url': 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-        'support_link': 'https://gofundme.com/marcus-sketch-williams'
+        'support_link':'https://open.spotify.com/artist/0EqPiYzvxVsw9BuMG3dE5D'
     },
     '2': {
         'name': 'Kyree and Alia',
         'bio': 'Known for her haunting designs that blend Eastern philosophy with Western street culture, Aria creates pieces that speak to the invisible struggles of urban existence. After losing her apartment due to rising rent costs, Aria channeled her experiences into powerful artistic expressions that bridge cultural divides and illuminate hidden truths.',
-        'image': '👤',  # Placeholder - replace with actual image path
+        'image': 'alia.jpeg',  # Placeholder - replace with actual image path
         'video_url': 'https://www.youtube.com/embed/Ec18vXsDHYU?si=inAoOSskFf69_J6Y',
-        'support_link': 'https://gofundme.com/aria-phantom-chen'
+        'support_link':'https://open.spotify.com/artist/0EqPiYzvxVsw9BuMG3dE5D'
     },
     '3': {
         'name': 'Kyree and Alia',
         'bio': 'A self-taught artist who found his voice through adversity, Jerome\'s electric designs pulse with the heartbeat of the city streets. Growing up in foster care and later experiencing homelessness, Jerome uses his art to process trauma and inspire hope. His work captures the electric energy of survival and the power of human resilience.',
-        'image': '⚡',  # Placeholder - replace with actual image path
+        'image': 'alia.jpeg',  # Placeholder - replace with actual image path
         'video_url': None,
-        'support_link': 'https://gofundme.com/jerome-volt-jackson'
+        'support_link':'https://open.spotify.com/artist/0EqPiYzvxVsw9BuMG3dE5D'
     }
 }
 
